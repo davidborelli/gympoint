@@ -40,7 +40,7 @@ class StudentController {
 
   async update(req, res) {
     const schema = Yup.object().shape({
-      student_id: Yup.number().required(),
+      id: Yup.number().required(),
       name: Yup.string(),
       email: Yup.string().email(),
       age: Yup.number().positive(),
@@ -57,14 +57,14 @@ class StudentController {
         where: { email: req.body.email },
       });
 
-      if (studentExists) {
+      if (studentExists && studentExists.id !== req.body.id) {
         return res
           .status(400)
           .json({ error: 'This e-mail is already registered' });
       }
     }
 
-    const student = await Student.findByPk(req.body.student_id);
+    const student = await Student.findByPk(req.body.id);
 
     if (!student) {
       return res.status(404).json({ error: 'Student not found' });

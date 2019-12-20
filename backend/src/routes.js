@@ -32,13 +32,13 @@ routes.put('/students', StudentController.update);
 routes.get('/students', StudentController.index);
 
 routes.post('/plans', PlanController.store);
-routes.put('/plans/:planId', PlanController.update);
+routes.put('/plans', PlanController.update);
 routes.get('/plans', PlanController.index);
 routes.delete('/plans/:planId', PlanController.delete);
 
 routes.post('/registrations', RegistrationController.store);
 routes.get('/registrations', RegistrationController.index);
-routes.put('/registrations/:registrationId', RegistrationController.update);
+routes.put('/registrations', RegistrationController.update);
 routes.delete('/registrations/:registrationId', RegistrationController.delete);
 
 routes.get('/help-orders/', RespondController.index);

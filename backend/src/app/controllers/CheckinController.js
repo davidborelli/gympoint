@@ -1,32 +1,35 @@
-import { subDays } from 'date-fns';
+import { subDays, startOfDay, endOfDay } from 'date-fns';
 import { Op } from 'sequelize';
+import * as Yup from 'yup';
 import Checkin from '../models/Checkin';
 import Student from '../models/Student';
 
 class CheckinController {
   async store(req, res) {
-    const { studentId } = req.params;
-
-    const student = await Student.findOne({
-      where: { id: studentId },
+    const schema = Yup.object().shape({
+      studentId: Yup.number().required(),
     });
 
-    if (!student) {
-      return res.status(400).json({ error: 'This user is not a provider' });
-    }
+    if (!(await schema.isValid(req.params)))
+      return res.status(400).json({ error: 'Invalid id!' });
 
-    const checkins = await Checkin.findAll({
+    const { studentId } = req.params;
+    const today = Number(new Date());
+    const startDate = Number(subDays(today, 7));
+    const lastCheckins = await Checkin.findAll({
       where: {
         student_id: studentId,
-        created_at: { [Op.between]: [subDays(new Date(), 7), new Date()] },
+        created_at: { [Op.between]: [startOfDay(startDate), endOfDay(today)] },
       },
     });
 
-    if (checkins.length >= 5) {
-      return res.status(400).json({ error: 'Check-ins number exceeded' });
-    }
+    if (lastCheckins && lastCheckins.length >= 5)
+      return res
+        .status(401)
+        .json('You can only check-in 5 times every 7 days!');
 
     const checkin = await Checkin.create({ student_id: studentId });
+
     return res.json(checkin);
   }
 

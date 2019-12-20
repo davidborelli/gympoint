@@ -36,6 +36,7 @@ class PlanController {
 
   async update(req, res) {
     const schema = Yup.object().shape({
+      id: Yup.number().required(),
       title: Yup.string(),
       duration: Yup.number().positive(),
       price: Yup.number().positive(),
@@ -45,8 +46,7 @@ class PlanController {
       return res.status(400).json({ error: 'Validation fails' });
     }
 
-    const { planId } = req.params;
-    const plan = await Plan.findByPk(planId);
+    const plan = await Plan.findByPk(req.body.id);
 
     if (!plan) {
       return res.status(404).json({ error: 'This plan does not exists' });

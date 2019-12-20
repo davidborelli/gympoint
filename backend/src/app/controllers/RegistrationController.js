@@ -8,7 +8,6 @@ import Student from '../models/Student';
 import Queue from '../../lib/Queue';
 import WelcomeMail from '../jobs/WelcomeMail';
 
-// TODO change Registration for Enrollment
 class RegistrationController {
   async store(req, res) {
     const schema = Yup.object().shape({
@@ -82,12 +81,10 @@ class RegistrationController {
       include: [
         {
           model: Student,
-          as: 'student',
           attributes: ['id', 'name', 'email'],
         },
         {
           model: Plan,
-          as: 'plan',
           attributes: ['id', 'title'],
         },
       ],
@@ -96,8 +93,8 @@ class RegistrationController {
   }
 
   async update(req, res) {
-    // TODO quais são as regras de negócio aqui?
     const schema = Yup.object().shape({
+      id: Yup.number().required(),
       student_id: Yup.number().positive(),
       plan_id: Yup.number().positive(),
       start_date: Yup.date(),
@@ -107,7 +104,13 @@ class RegistrationController {
       return res.status(400).json({ error: 'Validation fails' });
     }
 
-    const { student_id, start_date, plan_id } = req.body;
+    const { id, student_id, start_date, plan_id } = req.body;
+
+    const registrationExist = await Registration.findByPk(id);
+
+    if (!registrationExist) {
+      return res.status(400).json({ error: 'This has not exist' });
+    }
 
     const registration = await Registration.findOne({ where: { student_id } });
 
@@ -136,25 +139,18 @@ class RegistrationController {
     const total_price = duration * price;
     const end_date = addMonths(parseISO(start_date), duration);
 
-    const { id } = await registration.update({
+    const planUpdated = await registration.update({
       ...req.body,
       price: total_price,
       end_date,
     });
 
-    return res.json({
-      id,
-      student_id,
-      plan_id,
-      start_date,
-      end_date,
-    });
+    return res.json(planUpdated);
   }
 
   async delete(req, res) {
     const { registrationId } = req.params;
     const registration = await Registration.findByPk(registrationId);
-    // TODO gerar algum tipo de registro das matrículas
     await registration.destroy();
 
     return res.json();
