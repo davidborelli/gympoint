@@ -17,8 +17,6 @@ class WelcomeMail {
       price,
     } = data;
 
-    console.log(data);
-
     await Mail.sendMail({
       to: studentEmail,
       subject: `Matrícula concluída`,
