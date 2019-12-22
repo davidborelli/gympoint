@@ -2,10 +2,10 @@ import React from 'react';
 
 // import { Container } from './styles';
 
-export default function Dashboard() {
+export default function Plans() {
   return (
     <>
-      <h1>Dashboard</h1>
+      <h1>Plans</h1>
     </>
   );
 }
