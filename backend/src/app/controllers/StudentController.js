@@ -1,4 +1,5 @@
 import * as Yup from 'yup';
+import { Op } from 'sequelize';
 import Student from '../models/Student';
 
 class StudentController {
@@ -76,10 +77,35 @@ class StudentController {
   }
 
   async index(req, res) {
+    const { q } = req.query;
+    const where = {};
+
+    if (q) {
+      where.name = {
+        [Op.like]: `%${q}%`,
+      };
+    }
+
     const students = await Student.findAll({
-      attributes: ['name', 'email', 'age', 'weight'],
+      where: where || null,
+      attributes: ['id', 'name', 'email', 'age', 'weight'],
     });
+
     return res.json(students);
+  }
+
+  async delete(req, res) {
+    const { studentId } = req.params;
+    const student = await Student.findByPk(studentId);
+
+    if (!student) {
+      return res.status(404).json({ error: 'This student does not exists' });
+    }
+
+    const { name } = student;
+    await student.destroy();
+
+    return res.json({ message: `Student ${name} was deleted` });
   }
 }
 
