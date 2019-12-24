@@ -29,7 +29,7 @@ export default function Header() {
               <S.LinkMenu
                 key={menu.name}
                 to={menu.to}
-                isActive={menuActive.active === menu.name}
+                active={menuActive.active === menu.name ? 'true' : 'false'}
                 onClick={() => setMenuActive({ active: menu.name })}
               >
                 {menu.name}

@@ -35,7 +35,7 @@ export const Content = styled.div`
 export const LinkMenu = styled(Link)`
   margin: 0 10px;
   font-weight: bold;
-  color: ${props => (props.isActive ? '#444' : '#999')};
+  color: ${props => (props.active === 'true' ? '#444' : '#999')};
 `;
 
 export const Profile = styled.div`

@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
+
 import icon from '~/assets/icon-buttons.png';
 import * as S from './styles';
 
 import api from '~/services/api';
+import history from '~/services/history';
 
 export default function Students() {
   const [students, setStudents] = useState([]);
@@ -46,12 +48,16 @@ export default function Students() {
     }
   };
 
+  const handleNewStudent = () => {
+    history.push('/students/new');
+  };
+
   return (
     <S.Container>
       <header>
         <strong>Gerenciando alunos</strong>
         <div>
-          <button type="button">
+          <button type="button" onClick={handleNewStudent}>
             <img src={icon} alt="" />
             <span>CADASTRAR</span>
           </button>
@@ -71,12 +77,17 @@ export default function Students() {
 
         <tbody>
           {students.map(student => (
-            <tr>
+            <tr key={student.name}>
               <td className="name">{student.name}</td>
               <td className="email">{student.email}</td>
               <td className="age">{student.age}</td>
               <td className="edit">
-                <Link to={{ pathname: '/student', state: { student } }}>
+                <Link
+                  to={{
+                    pathname: `/students/${student.id}`,
+                    state: { studentLocated: student },
+                  }}
+                >
                   editar
                 </Link>
                 <button type="button" onClick={() => handleDelete(student)}>

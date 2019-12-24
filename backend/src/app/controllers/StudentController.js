@@ -88,7 +88,7 @@ class StudentController {
 
     const students = await Student.findAll({
       where: where || null,
-      attributes: ['id', 'name', 'email', 'age', 'weight'],
+      attributes: ['id', 'name', 'email', 'age', 'weight', 'height'],
     });
 
     return res.json(students);
