@@ -1,5 +1,14 @@
 import * as Yup from 'yup';
-import { parseISO, isBefore, addMonths } from 'date-fns';
+import {
+  parseISO,
+  isBefore,
+  addMonths,
+  setHours,
+  setMinutes,
+  setSeconds,
+} from 'date-fns';
+import pt from 'date-fns/locale/pt';
+import { zonedTimeToUtc } from 'date-fns-tz';
 
 import Registration from '../models/Registration';
 import Plan from '../models/Plan';
@@ -28,7 +37,8 @@ class RegistrationController {
     const parsedDate = parseISO(start_date);
 
     // date in the past, student already registered
-    if (isBefore(parsedDate, new Date())) {
+    const today = setSeconds(setMinutes(setHours(new Date(), 0), 0), 0);
+    if (isBefore(parsedDate, today)) {
       return res.status(400).json({ error: 'You cannot enroll in past dates' });
     }
 
@@ -78,13 +88,8 @@ class RegistrationController {
   async findById(req, res) {
     const { registrationId } = req.params;
 
-    const where = {
-      id: registrationId,
-    };
-
-    const registrations = await Registration.findAll({
+    const registrations = await Registration.findByPk(registrationId, {
       attributes: ['id', 'start_date', 'end_date', 'price', 'active'],
-      where: registrationId ? where : null,
       include: [
         {
           model: Student,
@@ -142,9 +147,10 @@ class RegistrationController {
       return res.status(400).json({ error: 'This student has no enrollment' });
     }
 
+    const today = setSeconds(setMinutes(setHours(new Date(), 0), 0), 0);
     if (start_date && start_date !== registration.start_date) {
       const parsedDate = parseISO(start_date);
-      if (isBefore(parsedDate, new Date())) {
+      if (isBefore(parsedDate, today)) {
         return res
           .status(400)
           .json({ error: 'You cannot enroll in past dates' });

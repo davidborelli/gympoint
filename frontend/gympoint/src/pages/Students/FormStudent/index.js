@@ -63,7 +63,12 @@ export default function FormStudent({ location }) {
         autoComplete="off"
       >
         <header>
-          <strong>Cadastro de alunos</strong>
+          {student ? (
+            <strong>Edição de aluno</strong>
+          ) : (
+            <strong>Cadastro de alunos</strong>
+          )}
+
           <div>
             <button
               id="btnVoltar"

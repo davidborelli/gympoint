@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect } from 'react';
 import DatePicker from 'react-datepicker';
 import PropTypes from 'prop-types';
 import pt from 'date-fns/locale/pt';
@@ -7,11 +7,9 @@ import { useField } from '@rocketseat/unform';
 
 import 'react-datepicker/dist/react-datepicker.css';
 
-export default function CustomDatePicker({ name, onChangeParam, ...props }) {
+export default function CustomDatePicker({ name, ...props }) {
   const ref = useRef();
-  const { fieldName, defaultValue, registerField, error } = useField(name);
-
-  const [selected, setSelected] = useState(defaultValue);
+  const { fieldName, registerField, error } = useField(name);
 
   useEffect(() => {
     registerField({
@@ -24,17 +22,10 @@ export default function CustomDatePicker({ name, onChangeParam, ...props }) {
     });
   }, [ref.current, fieldName]); // eslint-disable-line
 
-  const handleOnChange = date => {
-    setSelected(date);
-    onChangeParam(date);
-  };
-
   return (
     <>
       <DatePicker
         name={fieldName}
-        selected={selected}
-        onChange={date => handleOnChange(date)}
         placeholderText="Escolha a data"
         ref={ref}
         locale={pt}

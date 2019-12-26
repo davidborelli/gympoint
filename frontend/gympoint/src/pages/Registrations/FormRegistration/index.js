@@ -1,12 +1,15 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { Form, Input } from '@rocketseat/unform';
+import { Form } from '@rocketseat/unform';
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { format, addMonths } from 'date-fns';
+import { addMonths, parseISO } from 'date-fns';
 import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 
-import { createRegistrationRequest } from '~/store/modules/registration/actions';
+import {
+  createRegistrationRequest,
+  updateRegistrationRequest,
+} from '~/store/modules/registration/actions';
 
 import Select from './Select';
 import formater from '~/components/formater';
@@ -30,32 +33,26 @@ const schema = Yup.object().shape({
   start_date: Yup.date().required('A data é obrigatório'),
 });
 
-export default function FormRegistration({ location }) {
+export default function FormRegistration() {
   const dispatch = useDispatch();
 
-  const { planLocated } = location.state || '';
-  const [registration, setRegistration] = useState('');
+  const [student, setStudent] = useState('');
 
   const [plans, setPlans] = useState([]);
-  const [selectedPlan, setSelectedPlan] = useState('');
-  const [startDate, setStartDate] = useState('');
-  const [defPlan, setDefPlan] = useState('');
-  const [student, setStudent] = useState('');
+  const [planSelected, setPlanSelected] = useState('');
+  const [initialDate, setInicialDate] = useState(new Date());
 
   const { registrationId } = useParams();
 
-  const fullValue = useMemo(() => selectedPlan.duration * selectedPlan.price, [
-    selectedPlan.duration,
-    selectedPlan.price,
-  ]);
-
-  const dateEnd = useMemo(
-    () =>
-      startDate
-        ? format(addMonths(startDate, selectedPlan.duration), 'd/MM/yyyy')
-        : '',
-    [selectedPlan.duration, startDate]
+  const finalDate = useMemo(
+    () => addMonths(initialDate, planSelected.duration || 0),
+    [initialDate, planSelected.duration]
   );
+
+  const totalPrice = useMemo(() => planSelected.duration * planSelected.price, [
+    planSelected.duration,
+    planSelected.price,
+  ]);
 
   useEffect(() => {
     const loadPlans = async () => {
@@ -75,63 +72,59 @@ export default function FormRegistration({ location }) {
   }, []);
 
   useEffect(() => {
-    const loadRegistrationLocated = () => {
-      if (planLocated) {
-        setSelectedPlan({
-          value: planLocated.Plan.id,
-          label: planLocated.Plan.title,
-          price: planLocated.Plan.price,
-          duration: planLocated.Plan.duration,
-        });
-        setStartDate(new Date(planLocated.start_date));
-        setDefPlan({
-          value: planLocated.Plan.id,
-          label: planLocated.Plan.title,
-        });
-        setStudent({
-          value: 1,
-          label: 'David Borelli',
-        });
+    const loadRegistrationLocated = async () => {
+      const response = await api.get(`registrations/${registrationId}`);
 
-        setRegistration({
-          plan_id: defPlan,
-          start_date: new Date(planLocated.start_date),
-          student_id: student,
-        });
-      }
+      const date = parseISO(response.data.start_date);
+
+      const plan = {
+        value: response.data.Plan.id,
+        label: response.data.Plan.title,
+        price: response.data.Plan.price,
+        duration: response.data.Plan.duration,
+      };
+
+      const studentLoaded = {
+        value: response.data.Student.id,
+        label: response.data.Student.name,
+      };
+
+      setInicialDate(date);
+      setPlanSelected(plan);
+      setStudent(studentLoaded);
     };
 
     loadRegistrationLocated();
-  }, []); // eslint-disable-line
+  }, [registrationId]);
 
   const handleSubmit = data => {
-    dispatch(createRegistrationRequest(data));
-  };
-
-  const handleStartDate = event => {
-    setStartDate(event);
-  };
-
-  const handlePlan = event => {
-    setSelectedPlan(event);
+    if (registrationId) {
+      data = {
+        ...data,
+        id: registrationId,
+      };
+      dispatch(updateRegistrationRequest(data));
+    } else {
+      dispatch(createRegistrationRequest(data));
+    }
   };
 
   return (
     <S.Container>
-      <Form
-        initialData={registration}
-        onSubmit={handleSubmit}
-        schema={schema}
-        autoComplete="off"
-      >
+      <Form onSubmit={handleSubmit} schema={schema} autoComplete="off">
         <header>
-          <strong>Cadastro de matrícula</strong>
+          {registrationId ? (
+            <strong>Edição de matrícula</strong>
+          ) : (
+            <strong>Cadastro de matrícula</strong>
+          )}
+
           <div>
             <button
               id="btnVoltar"
               type="button"
               onClick={() => {
-                history.push('/plans');
+                history.push('/registrations');
               }}
             >
               <img src={icon} alt="" />
@@ -147,7 +140,12 @@ export default function FormRegistration({ location }) {
         <div className="body">
           <div className="search-student">
             <label htmlFor="title">ALUNO</label>
-            <SearchSelected name="student_id" placeholder="Selecione o aluno" />
+            <SearchSelected
+              name="student_id"
+              value={student}
+              placeholder="Selecione o aluno"
+              onChange={selected => setStudent(selected)}
+            />
           </div>
 
           <div className="inputs-footer">
@@ -156,7 +154,10 @@ export default function FormRegistration({ location }) {
               <Select
                 options={plans}
                 name="plan_id"
-                onChangeParam={handlePlan}
+                onChange={event => setPlanSelected(event)}
+                value={planSelected}
+                getOptionLabel={option => option.label}
+                getOptionValue={option => option.value}
               />
             </div>
 
@@ -164,19 +165,20 @@ export default function FormRegistration({ location }) {
               <label htmlFor="date-start">DATA DE INÍCIO</label>
               <DatePicker
                 name="start_date"
-                onChangeParam={handleStartDate}
-                readOnly={!selectedPlan.value}
+                selected={initialDate}
+                onChange={date => setInicialDate(date)}
+                readOnly={!planSelected.value}
               />
             </div>
 
             <div className="date-end">
               <label htmlFor="date-end">DATA DE TÉRMINO</label>
-              <Input disabled value={dateEnd} name="date_end" />
+              <DatePicker name="date_end" selected={finalDate} readOnly />
             </div>
 
             <div className="full-price">
               <label htmlFor="full-price">VALOR FINAL</label>
-              <input disabled value={formater.format(fullValue || 0.0)} />
+              <input disabled value={formater.format(totalPrice || 0.0)} />
             </div>
           </div>
         </div>

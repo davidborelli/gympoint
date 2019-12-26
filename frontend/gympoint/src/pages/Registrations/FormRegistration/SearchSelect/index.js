@@ -9,10 +9,9 @@ import api from '~/services/api';
 
 export default function SearchSelect({ name, ...props }) {
   const ref = useRef();
-  const { fieldName, defaultValue, registerField, error } = useField(name);
+  const { fieldName, registerField, error } = useField(name);
 
   const [inputValue, setInputValue] = useState('');
-  const [valueSelected, setValueSelected] = useState(defaultValue || '');
 
   useEffect(() => {
     registerField({
@@ -51,8 +50,6 @@ export default function SearchSelect({ name, ...props }) {
         loadOptions={loadOptions}
         defaultOptions
         onInputChange={data => setInputValue(data)}
-        onChange={selected => setValueSelected(selected)}
-        value={valueSelected}
         ref={ref}
         className="select-student"
         styles={customStyles}

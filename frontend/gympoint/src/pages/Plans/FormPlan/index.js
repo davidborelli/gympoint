@@ -58,7 +58,12 @@ export default function FormPlan({ location }) {
     <S.Container>
       <Form initialData={plan} onSubmit={handleSubmit} schema={schema}>
         <header>
-          <strong>Cadastro de planos</strong>
+          {plan ? (
+            <strong>Edição de planos</strong>
+          ) : (
+            <strong>Cadastro de planos</strong>
+          )}
+
           <div>
             <button
               id="btnVoltar"
