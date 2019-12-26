@@ -11,6 +11,8 @@ import Plans from '~/pages/Plans';
 import FormPlan from '~/pages/Plans/FormPlan';
 
 import Registrations from '~/pages/Registrations';
+import FormRegistrations from '~/pages/Registrations/FormRegistration';
+
 import HelpOrders from '~/pages/HelpOrders';
 
 export default function Routes() {
@@ -26,7 +28,18 @@ export default function Routes() {
       <Route path="/plans/:planId" component={FormPlan} isPrivate />
       <Route path="/plans" component={Plans} isPrivate />
 
+      <Route
+        path="/registrations/new"
+        component={FormRegistrations}
+        isPrivate
+      />
+      <Route
+        path="/registrations/:registrationId"
+        component={FormRegistrations}
+        isPrivate
+      />
       <Route path="/registrations" component={Registrations} isPrivate />
+
       <Route path="/help-orders" component={HelpOrders} isPrivate />
     </Switch>
   );

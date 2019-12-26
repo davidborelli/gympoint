@@ -20,14 +20,16 @@ export default function Registrations() {
 
       const registrationsFormated = response.data.map(regLocated => ({
         ...regLocated,
-        start_date: format(
+        start_date: regLocated.start_date,
+        start_date_formated: format(
           parseISO(regLocated.start_date),
           "d 'de' MMMM 'de' yyyy",
           {
             locale: pt,
           }
         ),
-        end_date: format(
+        end_date: regLocated.end_date,
+        end_date_formated: format(
           parseISO(regLocated.end_date),
           "d 'de' MMMM 'de' yyyy",
           {
@@ -49,7 +51,7 @@ export default function Registrations() {
           `Confirma a exclusão da matrícula do aluno ${registration.Student.name}`
         )
       ) {
-        await api.delete(`plans/${registration.id}`);
+        await api.delete(`registrations/${registration.id}`);
 
         const newRegistrationsList = registrations.filter(
           registrationParam => registrationParam.id !== registration.id
@@ -101,19 +103,19 @@ export default function Registrations() {
             <tr key={registration.id}>
               <td className="student">{registration.Student.name}</td>
               <td className="plan">{registration.Plan.title}</td>
-              <td className="start">{registration.start_date}</td>
-              <td className="end">{registration.end_date}</td>
+              <td className="start">{registration.start_date_formated}</td>
+              <td className="end">{registration.end_date_formated}</td>
               <td className="active">
                 {registration.active ? (
                   <MdAssignmentTurnedIn size={21} color="#42CB59" />
                 ) : (
-                  <MdAssignmentTurnedIn size={21} color="#999" />
+                  <MdAssignmentTurnedIn size={21} color="#DDDDDD" />
                 )}
               </td>
               <td className="edit">
                 <Link
                   to={{
-                    pathname: `/plans/${registration.id}`,
+                    pathname: `/registrations/${registration.id}`,
                     state: { planLocated: registration },
                   }}
                 >

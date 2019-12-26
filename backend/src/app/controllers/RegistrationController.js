@@ -75,6 +75,30 @@ class RegistrationController {
     return res.json(registration);
   }
 
+  async findById(req, res) {
+    const { registrationId } = req.params;
+
+    const where = {
+      id: registrationId,
+    };
+
+    const registrations = await Registration.findAll({
+      attributes: ['id', 'start_date', 'end_date', 'price', 'active'],
+      where: registrationId ? where : null,
+      include: [
+        {
+          model: Student,
+          attributes: ['id', 'name', 'email'],
+        },
+        {
+          model: Plan,
+          attributes: ['id', 'title', 'price', 'duration'],
+        },
+      ],
+    });
+    return res.json(registrations);
+  }
+
   async index(req, res) {
     const registrations = await Registration.findAll({
       attributes: ['id', 'start_date', 'end_date', 'price', 'active'],
@@ -85,7 +109,7 @@ class RegistrationController {
         },
         {
           model: Plan,
-          attributes: ['id', 'title'],
+          attributes: ['id', 'title', 'price', 'duration'],
         },
       ],
     });

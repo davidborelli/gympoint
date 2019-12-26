@@ -56,7 +56,12 @@ export default function FormStudent({ location }) {
 
   return (
     <S.Container>
-      <Form initialData={student} onSubmit={handleSubmit} schema={schema}>
+      <Form
+        initialData={student}
+        onSubmit={handleSubmit}
+        schema={schema}
+        autoComplete="off"
+      >
         <header>
           <strong>Cadastro de alunos</strong>
           <div>
