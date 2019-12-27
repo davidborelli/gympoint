@@ -6,8 +6,6 @@ export const Container = styled.SafeAreaView`
   margin: 0 25px;
 `;
 
-export const Title = styled.Text``;
-
 export const NewButton = styled(Button)`
   margin: 25px 0;
 `;

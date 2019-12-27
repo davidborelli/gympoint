@@ -1,6 +1,6 @@
 import React from 'react';
 
-import * as S from './Styles';
+import * as S from './styles';
 
 export default function Checkin({ data }) {
   return (
