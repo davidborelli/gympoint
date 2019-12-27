@@ -1,8 +1,17 @@
 import React from 'react';
-import { View } from 'react-native';
+import { withNavigationFocus } from 'react-navigation';
 
-// import { Container } from './styles';
+import Icon from 'react-native-vector-icons/MaterialIcons';
+import Background from '~/components/Background';
 
-export default function Dashboard() {
-  return <View />;
+function Dashboard() {
+  return <Background />;
 }
+
+Dashboard.navigationOptions = {
+  tabBarLabel: 'Check-ins',
+  tabBarIcon: ({ tintColor }) => (
+    <Icon name="event" size={20} color={tintColor} />
+  ),
+};
+export default withNavigationFocus(Dashboard);
