@@ -12,7 +12,6 @@ class RespondController {
       include: [
         {
           model: Student,
-          as: 'student',
           attributes: ['id', 'name', 'email'],
         },
       ],

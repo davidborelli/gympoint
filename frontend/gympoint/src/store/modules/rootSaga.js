@@ -5,7 +5,8 @@ import user from './user/sagas';
 import student from './student/sagas';
 import plan from './plan/sagas';
 import registration from './registration/sagas';
+import helpOrders from './helpOrders/sagas';
 
 export default function* rootSaga() {
-  return yield all([auth, user, student, plan, registration]);
+  return yield all([auth, user, student, plan, registration, helpOrders]);
 }

@@ -9,11 +9,12 @@ import * as S from './styles';
 import { menus } from './menus';
 
 export default function Header() {
+  const activeRoute = window.location.pathname.split('/')[1];
+
   const dispatch = useDispatch();
   const profile = useSelector(state => state.user.profile);
 
   const [menusList] = useState(menus);
-  const [menuActive, setMenuActive] = useState({ active: 'ALUNOS' });
 
   const handleLogout = () => {
     dispatch(signOut());
@@ -29,8 +30,7 @@ export default function Header() {
               <S.LinkMenu
                 key={menu.name}
                 to={menu.to}
-                active={menuActive.active === menu.name ? 'true' : 'false'}
-                onClick={() => setMenuActive({ active: menu.name })}
+                active={activeRoute === menu.route ? 'true' : 'false'}
               >
                 {menu.name}
               </S.LinkMenu>

@@ -10,7 +10,6 @@ export function* updateProfile({ payload }) {
     const { name, email, avatar_id, ...rest } = payload.data;
 
     const profile = {
-      // Unir 2 objetos
       name,
       email,
       avatar_id,

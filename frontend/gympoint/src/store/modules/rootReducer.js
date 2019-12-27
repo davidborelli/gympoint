@@ -5,6 +5,7 @@ import user from './user/reducer';
 import student from './student/reducers';
 import plan from './plan/reducers';
 import registration from './registration/reducers';
+import helpOrders from './helpOrders/reducers';
 
 export default combineReducers({
   auth,
@@ -12,4 +13,5 @@ export default combineReducers({
   student,
   plan,
   registration,
+  helpOrders,
 });

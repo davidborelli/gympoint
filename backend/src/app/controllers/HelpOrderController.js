@@ -76,7 +76,6 @@ class HelpOrderController {
       include: [
         {
           model: Student,
-          as: 'student',
           attributes: ['name', 'email'],
         },
       ],

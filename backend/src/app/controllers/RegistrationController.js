@@ -7,8 +7,6 @@ import {
   setMinutes,
   setSeconds,
 } from 'date-fns';
-import pt from 'date-fns/locale/pt';
-import { zonedTimeToUtc } from 'date-fns-tz';
 
 import Registration from '../models/Registration';
 import Plan from '../models/Plan';
