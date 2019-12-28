@@ -74,7 +74,7 @@ HelpOrders.defaultProps = {
 };
 
 HelpOrders.propTypes = {
-  navigation: PropTypes.shape(PropTypes.object),
+  navigation: PropTypes.oneOfType(PropTypes.object),
   isFocused: PropTypes.bool,
 };
 

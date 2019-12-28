@@ -45,5 +45,5 @@ New.defaultProps = {
 };
 
 New.propTypes = {
-  navigation: PropTypes.shape(PropTypes.bool),
+  navigation: PropTypes.oneOfType(PropTypes.object),
 };
