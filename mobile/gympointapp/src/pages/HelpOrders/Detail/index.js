@@ -1,5 +1,5 @@
 import React from 'react';
-
+import PropTypes from 'prop-types';
 import Background from '~/components/Background';
 
 import * as S from './styles';
@@ -27,3 +27,11 @@ export default function Consult({ navigation }) {
     </Background>
   );
 }
+
+Consult.defaultProps = {
+  navigation: {},
+};
+
+Consult.propTypes = {
+  navigation: PropTypes.shape(PropTypes.object),
+};

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Alert } from 'react-native';
+import PropTypes from 'prop-types';
 
 import Background from '~/components/Background';
 
@@ -21,6 +22,7 @@ export default function New({ navigation }) {
         Alert.alert('Sucesso', 'Pergunta eviada com sucesso.');
         setQuestion('');
       }
+      navigation.navigate('List');
     } catch (error) {
       Alert.alert('Falha', 'Falha ao eviar pergunta.');
     }
@@ -37,3 +39,11 @@ export default function New({ navigation }) {
     </Background>
   );
 }
+
+New.defaultProps = {
+  navigation: {},
+};
+
+New.propTypes = {
+  navigation: PropTypes.shape(PropTypes.bool),
+};

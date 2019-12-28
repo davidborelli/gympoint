@@ -1,5 +1,5 @@
 import React from 'react';
-
+import PropTypes from 'prop-types';
 import * as S from './styles';
 
 export default function Checkin({ data }) {
@@ -12,3 +12,7 @@ export default function Checkin({ data }) {
     </S.Container>
   );
 }
+
+Checkin.propTypes = {
+  data: PropTypes.shape(PropTypes.object).isRequired,
+};

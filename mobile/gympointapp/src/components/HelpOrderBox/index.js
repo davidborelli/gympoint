@@ -1,13 +1,10 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
 import * as S from './styles';
 
 export default function HelpOrderBox({ data, navigation }) {
-  const handleShowDetails = data => {
-    console.tron.log(data);
-  };
-
   return (
     <S.Container onPress={() => navigation.navigate('Detail', { data })}>
       <S.BoxInfoHead>
@@ -33,3 +30,8 @@ export default function HelpOrderBox({ data, navigation }) {
     </S.Container>
   );
 }
+
+HelpOrderBox.propTypes = {
+  data: PropTypes.shape(PropTypes.object).isRequired,
+  navigation: PropTypes.shape(PropTypes.object).isRequired,
+};

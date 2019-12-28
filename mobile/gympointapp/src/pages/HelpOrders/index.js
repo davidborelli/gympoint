@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 import { formatRelative, parseISO } from 'date-fns';
 import pt from 'date-fns/locale/pt';
 import { Alert } from 'react-native';
+import PropTypes from 'prop-types';
 
 import Background from '~/components/Background';
 import HelpOrderBox from '~/components/HelpOrderBox';
@@ -30,23 +31,23 @@ function HelpOrders({ navigation, isFocused }) {
     };
   };
 
+  const loadHelpOrders = async () => {
+    try {
+      const response = await api.get(`students/${studentId}/help-orders`);
+
+      const dataResponse = response.data.map(help => formatHelpOrderData(help));
+
+      setHelps(dataResponse);
+    } catch (error) {
+      Alert.alert('Erro...', 'Erro ao obter os dados de ajuda');
+    }
+  };
+
   useEffect(() => {
-    const loadHelpOrders = async () => {
-      try {
-        const response = await api.get(`students/${studentId}/help-orders`);
-
-        const dataResponse = response.data.map(help =>
-          formatHelpOrderData(help)
-        );
-
-        setHelps(dataResponse);
-      } catch (error) {
-        Alert.alert('Erro...', 'Erro ao obter os dados de ajuda');
-      }
-    };
-
-    loadHelpOrders();
-  }, [studentId]);
+    if (isFocused) {
+      loadHelpOrders();
+    }
+  }, [isFocused]);
 
   return (
     <Background>
@@ -66,5 +67,15 @@ function HelpOrders({ navigation, isFocused }) {
     </Background>
   );
 }
+
+HelpOrders.defaultProps = {
+  navigation: {},
+  isFocused: false,
+};
+
+HelpOrders.propTypes = {
+  navigation: PropTypes.shape(PropTypes.object),
+  isFocused: PropTypes.bool,
+};
 
 export default withNavigationFocus(HelpOrders);
