@@ -11,8 +11,8 @@ export const BoxInfo = styled.View`
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: space-between;
   border: 1px solid #dddddd;
+  justify-content: space-between;
 `;
 
 export const BoxTitle = styled.Text`
