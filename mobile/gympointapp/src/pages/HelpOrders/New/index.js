@@ -33,7 +33,7 @@ export default function New({ navigation }) {
       <S.Container>
         <S.QuestionText onChangeText={setQuestion} value={question} />
         <S.SubmitButton onPress={handleSendQuestion}>
-          Enviar pedido
+          Enviar pergunta
         </S.SubmitButton>
       </S.Container>
     </Background>
