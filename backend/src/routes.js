@@ -19,10 +19,10 @@ routes.get('/students/:studentId', StudentController.findById);
 routes.post('/students/:studentId/checkins', CheckinController.store);
 routes.get('/students/:studentId/checkins', CheckinController.index);
 
+routes.get('/ok', (req, res) => res.send('ok'));
+
 routes.post('/students/:studentId/help-orders', HelpOrderController.store);
 routes.get('/students/:studentId/help-orders', HelpOrderController.index);
-
-routes.get('/ok', (req, res) => res.send('ok'));
 
 routes.use(auth);
 
