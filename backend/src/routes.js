@@ -22,6 +22,8 @@ routes.get('/students/:studentId/checkins', CheckinController.index);
 routes.post('/students/:studentId/help-orders', HelpOrderController.store);
 routes.get('/students/:studentId/help-orders', HelpOrderController.index);
 
+routes.get('/ok', (req, res) => res.send('ok'));
+
 routes.use(auth);
 
 routes.post('/users', UserController.store);
