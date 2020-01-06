@@ -128,7 +128,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.gympointapp"
+        applicationId "com.gympoint"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
